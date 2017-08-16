@@ -26,7 +26,7 @@ public class MarkedSeekBar extends View {
     private float mProgress; // real time value
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
-
+    private boolean isThumbOnDragging; // is thumb on dragging or not
 
     public MarkedSeekBar(Context context) {
         super(context);
@@ -73,6 +73,26 @@ public class MarkedSeekBar extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN: {
+                isThumbOnDragging = isThumbTouched(event);
+            }
+            break;
+            case MotionEvent.ACTION_MOVE: {
+
+            }
+            break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL: {
+
+            }
+            break;
+            default:
+                break;
+
+        }
+
 
         Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
 
