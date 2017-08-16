@@ -115,6 +115,21 @@ public class MarkedSeekBar extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 isThumbOnDragging = isThumbTouched(event);
+
+                if (isThumbOnDragging) {
+
+                } else {
+                    //没有触碰到thumb区域
+                    mThumbCenterX = event.getX();
+                    if (mThumbCenterX < mLeft) {
+                        mThumbCenterX = mLeft;
+                    }
+                    if (mThumbCenterX > mRight) {
+                        mThumbCenterX = mRight;
+                    }
+                    mProgress = (mThumbCenterX - mLeft) * mDelta / mTrackLength + mMin;
+                    invalidate();
+                }
             }
             break;
             case MotionEvent.ACTION_MOVE: {
@@ -130,7 +145,6 @@ public class MarkedSeekBar extends View {
                 break;
 
         }
-
 
         Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
 
