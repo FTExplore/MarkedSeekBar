@@ -50,6 +50,20 @@ public class MarkedSeekBar extends View {
     private float mFilmTitleMarkerPos; // marker postion
     private float mFilmTailMarkerPos; // marker postion
 
+    public interface OnSeekBarChangeListener {
+        void onProgressChanged();
+
+        void onStartTrackingTouch();
+
+        void onStopTrackingTouch();
+    }
+
+    private OnSeekBarChangeListener onSeekBarChangeListener;
+
+    public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
+        onSeekBarChangeListener = listener;
+    }
+
     public MarkedSeekBar(Context context) {
         super(context);
         init(context, null);
@@ -168,8 +182,8 @@ public class MarkedSeekBar extends View {
 
         //draw the marker
         mPaint.setColor(mColorMarker);
-        canvas.drawCircle(xFilmTitle, yTop, mBackgroundTracSize/2, mPaint);
-        canvas.drawCircle(xFilmTail, yTop, mBackgroundTracSize/2, mPaint);
+        canvas.drawCircle(xFilmTitle, yTop, mBackgroundTracSize / 2, mPaint);
+        canvas.drawCircle(xFilmTail, yTop, mBackgroundTracSize / 2, mPaint);
 
         //draw progress line
         mPaint.setColor(mColorProgressLine);
