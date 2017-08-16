@@ -38,6 +38,7 @@ public class MarkedSeekBar extends View {
     private int mColorThumb;
     //轨道的厚度
     private float mSecondTrackSize;
+    private float mProgressTrackSize;
 
     public MarkedSeekBar(Context context) {
         super(context);
@@ -65,6 +66,7 @@ public class MarkedSeekBar extends View {
         mThumbRadius = dp2px(5);
         mThumbRadiusOnDragging = dp2px(10);
         mSecondTrackSize = dp2px(2);
+        mProgressTrackSize = dp2px(2);
     }
 
     @Override
@@ -103,7 +105,9 @@ public class MarkedSeekBar extends View {
         canvas.drawCircle(mThumbCenterX, getMeasuredHeight() / 2, mThumbRadius, mPaint);
 
         //draw progress line
-
+        mPaint.setColor(mColorProgressLine);
+        mPaint.setStrokeWidth(mProgressTrackSize);
+        canvas.drawLine(xLeft, yTop, mThumbCenterX, yTop, mPaint);
         //draw thumb
 
 
