@@ -57,9 +57,18 @@ public class MarkedSeekBar extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        //draw background line
+
+        //draw buffing line
 
         //draw the marker
         canvas.drawCircle(250, 50, 10, mPaint);
+
+        //draw progress line
+
+        //draw thumb
+
+
     }
 
     @Override
