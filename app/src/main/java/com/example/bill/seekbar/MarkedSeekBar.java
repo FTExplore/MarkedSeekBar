@@ -23,7 +23,8 @@ public class MarkedSeekBar extends View {
     private float mDelta; // max - min
     private float mMin = 0f; // min
     private float mMax = 100f; // max
-    private float mProgress = 0; // real time value
+    private float mProgress = 0; // playing position value
+    private float mBufferProgress = 50;// buffering position value
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
     private boolean isThumbOnDragging = false; // is thumb on dragging or not
@@ -37,7 +38,8 @@ public class MarkedSeekBar extends View {
     private int mColorProgressLine;
     private int mColorThumb;
     //轨道的厚度
-    private float mSecondTrackSize;
+    private float mBackgroundTracSize;
+    private float mBufferTrackSize;
     private float mProgressTrackSize;
 
     public MarkedSeekBar(Context context) {
@@ -65,8 +67,9 @@ public class MarkedSeekBar extends View {
 
         mThumbRadius = dp2px(5);
         mThumbRadiusOnDragging = dp2px(10);
-        mSecondTrackSize = dp2px(2);
+        mBufferTrackSize = dp2px(2);
         mProgressTrackSize = dp2px(2);
+        mBackgroundTracSize = dp2px(2);
     }
 
     @Override
@@ -87,7 +90,7 @@ public class MarkedSeekBar extends View {
         float xLeft = getPaddingLeft();
         float xRight = getMeasuredWidth() - getPaddingRight();
         float yTop = getPaddingTop() + mThumbRadiusOnDragging;
-
+        float xBuffer = (mTrackLength / mDelta) * (mBufferProgress - mMin) + mLeft;
 
         if (!isThumbOnDragging) {
             mThumbCenterX = (mTrackLength / mDelta) * (mProgress - mMin) + mLeft;
@@ -95,10 +98,13 @@ public class MarkedSeekBar extends View {
 
         //draw background line
         mPaint.setColor(mColorBackgroundLine);
-        mPaint.setStrokeWidth(mSecondTrackSize);
+        mPaint.setStrokeWidth(mBufferTrackSize);
         canvas.drawLine(mLeft, yTop, mRight, yTop, mPaint);
 
         //draw buffing line
+        mPaint.setColor(mColorBufferingLine);
+        mPaint.setStrokeWidth(mBackgroundTracSize);
+        canvas.drawLine(mLeft,yTop,xBuffer,yTop,mPaint);
 
         //draw the marker
         /*mPaint.setColor(mColorThumb);
