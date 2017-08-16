@@ -23,7 +23,7 @@ public class MarkedSeekBar extends View {
     private float mDelta; // max - min
     private float mMin = 0f; // min
     private float mMax = 100f; // max
-    private float mProgress; // real time value
+    private float mProgress = 0; // real time value
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
     private boolean isThumbOnDragging = false; // is thumb on dragging or not
@@ -90,28 +90,32 @@ public class MarkedSeekBar extends View {
 
 
         if (!isThumbOnDragging) {
-            mThumbCenterX = mTrackLength / mDelta * (mProgress - mMin) + xLeft;
+            mThumbCenterX = (mTrackLength / mDelta) * (mProgress - mMin) + mLeft;
         }
 
         //draw background line
         mPaint.setColor(mColorBackgroundLine);
         mPaint.setStrokeWidth(mSecondTrackSize);
-        canvas.drawLine(xLeft, yTop, xRight, yTop, mPaint);
+        canvas.drawLine(mLeft, yTop, mRight, yTop, mPaint);
 
         //draw buffing line
 
         //draw the marker
-        mPaint.setColor(mColorThumb);
-        canvas.drawCircle(mThumbCenterX, getMeasuredHeight() / 2, mThumbRadius, mPaint);
+        /*mPaint.setColor(mColorThumb);
+        canvas.drawCircle(mThumbCenterX, getMeasuredHeight() / 2, mThumbRadius, mPaint);*/
 
         //draw progress line
         mPaint.setColor(mColorProgressLine);
         mPaint.setStrokeWidth(mProgressTrackSize);
-        canvas.drawLine(xLeft, yTop, mThumbCenterX, yTop, mPaint);
-        //draw thumb
+        canvas.drawLine(mLeft, yTop, mThumbCenterX, yTop, mPaint);
 
+        //draw thumb
+        mPaint.setColor(mColorThumb);
+        canvas.drawCircle(mThumbCenterX, yTop, isThumbOnDragging ? mThumbRadiusOnDragging : mThumbRadius, mPaint);
 
     }
+
+    float dx;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -131,18 +135,33 @@ public class MarkedSeekBar extends View {
                     if (mThumbCenterX > mRight) {
                         mThumbCenterX = mRight;
                     }
-                    mProgress = (mThumbCenterX - mLeft) * mDelta / mTrackLength + mMin;
+                    updateProgress();
+                    invalidate();
+                }
+            }
+
+            dx = mThumbCenterX - event.getX();
+
+            break;
+            case MotionEvent.ACTION_MOVE: {
+                if (isThumbOnDragging) {
+                    mThumbCenterX = event.getX() + dx;
+                    if (mThumbCenterX < mLeft) {
+                        mThumbCenterX = mLeft;
+                    }
+                    if (mThumbCenterX > mRight) {
+                        mThumbCenterX = mRight;
+                    }
+                    updateProgress();
                     invalidate();
                 }
             }
             break;
-            case MotionEvent.ACTION_MOVE: {
-
-            }
-            break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL: {
-
+                isThumbOnDragging = false;
+                updateProgress();
+                invalidate();
             }
             break;
             default:
@@ -152,9 +171,16 @@ public class MarkedSeekBar extends View {
 
         Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
 
-        return super.onTouchEvent(event);
+        return isThumbOnDragging || super.onTouchEvent(event);
     }
 
+    /**
+     * 当用户手动或者自动更改了thumb位置
+     * 根据thumb的坐标更新mProgress的数值
+     */
+    private void updateProgress(){
+        mProgress = (mThumbCenterX - mLeft) * mDelta / mTrackLength + mMin;
+    }
 
     /**
      * Detect effective touch of thumb
