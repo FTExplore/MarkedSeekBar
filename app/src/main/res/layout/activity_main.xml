@@ -4,16 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context="com.example.bill.seekbar.MainActivity">
 
     <com.example.bill.seekbar.MarkedSeekBar
         android:id="@+id/sb"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:progressDrawable="@drawable/seekbackground"
-        android:secondaryProgress="50"
-        android:maxHeight="5dp"
-        android:minHeight="5dp"
-        android:max="100" />
+        android:layout_height="20dp" />
 
 </RelativeLayout>

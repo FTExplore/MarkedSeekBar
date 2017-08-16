@@ -27,6 +27,16 @@ public class MarkedSeekBar extends View {
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
     private boolean isThumbOnDragging; // is thumb on dragging or not
+    //thumb的大小
+    private int mThumbRadius; // radius of thumb
+    private int mThumbRadiusOnDragging; // radius of thumb when be dragging
+    //Color
+    private int mColorBackgroundLine;
+    private int mColorBufferingLine;
+    private int mColorProgressLine;
+    private int mColorThumb;
+    //轨道的厚度
+    private float mSecondTrackSize;
 
     public MarkedSeekBar(Context context) {
         super(context);
@@ -45,24 +55,42 @@ public class MarkedSeekBar extends View {
 
     private void init(Context context, AttributeSet attrs) {
         mPaint = new Paint();
-        mPaint.setColor(Color.parseColor("#d7c60e"));
+        mColorBackgroundLine = Color.parseColor("#4dffffff");
+        //mColorBackgroundLine = Color.parseColor("#FF0000");
+        mColorBufferingLine = Color.parseColor("#99ffffff");
+        mColorProgressLine = Color.parseColor("#FFE61616");
+        mColorThumb = Color.parseColor("#FFE61616");
+
+        mThumbRadiusOnDragging = dp2px(10);
+        mSecondTrackSize = dp2px(5);
     }
 
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        mLeft = getPaddingLeft() + mThumbRadiusOnDragging;
+        mRight = getMeasuredWidth() - getPaddingRight() - mThumbRadiusOnDragging;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        float xLeft = getPaddingLeft();
+        float xRight = getMeasuredWidth() - getPaddingRight();
+        float yTop = getPaddingTop() + mThumbRadiusOnDragging;
+
         //draw background line
+        mPaint.setColor(mColorBackgroundLine);
+        mPaint.setStrokeWidth(mSecondTrackSize);
+        canvas.drawLine(xLeft, yTop, xRight, yTop, mPaint);
 
         //draw buffing line
 
         //draw the marker
-        canvas.drawCircle(250, 50, 10, mPaint);
+        mPaint.setColor(mColorThumb);
+        canvas.drawCircle(xLeft, getMeasuredHeight() / 2, 10, mPaint);
 
         //draw progress line
 
