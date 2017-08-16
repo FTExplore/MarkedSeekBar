@@ -51,7 +51,7 @@ public class MarkedSeekBar extends View {
     private float mFilmTailMarkerPos; // marker postion
 
     public interface OnSeekBarChangeListener {
-        void onProgressChanged(MarkedSeekBar seekBar, int i, boolean b);
+        void onProgressChanged(MarkedSeekBar seekBar, int progress, boolean isFromUser);
 
         void onStartTrackingTouch(MarkedSeekBar seekBar);
 
