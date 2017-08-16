@@ -25,6 +25,9 @@ public class MarkedSeekBar extends View {
     private float mMax = 100f; // max
     private float mProgress = 0; // playing position value
     private float mBufferProgress = 50;// buffering position value
+    private float mBufferMinValue = 0.0f;//buffering min value
+    private float mBufferMaxValue = 100;// buffering max value
+    private float mBufferDelta;// mBufferMaxValue - mBufferMinValue
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
     private boolean isThumbOnDragging = false; // is thumb on dragging or not
@@ -72,6 +75,29 @@ public class MarkedSeekBar extends View {
         mBackgroundTracSize = dp2px(2);
     }
 
+    /**
+     * 设置缓冲位置
+     */
+    public void setBufferProgress(float bufferProgress) {
+        if (bufferProgress > mBufferMaxValue){
+            mBufferProgress = mBufferMaxValue;
+        }else if (bufferProgress < 0){
+            mBufferProgress = 0f;
+        }else {
+            mBufferProgress = bufferProgress;
+        }
+
+        invalidate();
+    }
+
+    /**
+     * 设置缓冲最大值
+     */
+    public void setBufferMaxVaule(float bufferMaxVaule) {
+        this.mBufferMaxValue = bufferMaxVaule;
+        mBufferDelta = mBufferMaxValue - mBufferMinValue;
+    }
+
     @Override
     protected synchronized void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -81,6 +107,8 @@ public class MarkedSeekBar extends View {
 
         mTrackLength = mRight - mLeft;
         mDelta = mMax - mMin;
+
+        mBufferDelta = mBufferMaxValue - mBufferMinValue;
     }
 
     @Override
@@ -90,7 +118,7 @@ public class MarkedSeekBar extends View {
         float xLeft = getPaddingLeft();
         float xRight = getMeasuredWidth() - getPaddingRight();
         float yTop = getPaddingTop() + mThumbRadiusOnDragging;
-        float xBuffer = (mTrackLength / mDelta) * (mBufferProgress - mMin) + mLeft;
+        float xBuffer = (mTrackLength / mBufferDelta) * (mBufferProgress - mBufferMinValue) + mLeft;
 
         if (!isThumbOnDragging) {
             mThumbCenterX = (mTrackLength / mDelta) * (mProgress - mMin) + mLeft;
@@ -104,7 +132,7 @@ public class MarkedSeekBar extends View {
         //draw buffing line
         mPaint.setColor(mColorBufferingLine);
         mPaint.setStrokeWidth(mBackgroundTracSize);
-        canvas.drawLine(mLeft,yTop,xBuffer,yTop,mPaint);
+        canvas.drawLine(mLeft, yTop, xBuffer, yTop, mPaint);
 
         //draw the marker
         /*mPaint.setColor(mColorThumb);
@@ -184,7 +212,7 @@ public class MarkedSeekBar extends View {
      * 当用户手动或者自动更改了thumb位置
      * 根据thumb的坐标更新mProgress的数值
      */
-    private void updateProgress(){
+    private void updateProgress() {
         mProgress = (mThumbCenterX - mLeft) * mDelta / mTrackLength + mMin;
     }
 
