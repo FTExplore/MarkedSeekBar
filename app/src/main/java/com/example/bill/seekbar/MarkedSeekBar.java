@@ -21,13 +21,14 @@ public class MarkedSeekBar extends View {
     private int mHeight;
     private float mTrackLength; // pixel length of whole track
     private float mDelta; // max - min
-    private float mMin; // min
-    private float mMax; // max
+    private float mMin = 0f; // min
+    private float mMax = 100f; // max
     private float mProgress; // real time value
     private float mLeft; // space between left of track and left of the view
     private float mRight; // space between right of track and left of the view
-    private boolean isThumbOnDragging; // is thumb on dragging or not
-    //thumb的大小
+    private boolean isThumbOnDragging = false; // is thumb on dragging or not
+    //thumb
+    private float mThumbCenterX; // X coordinate of thumb's center
     private int mThumbRadius; // radius of thumb
     private int mThumbRadiusOnDragging; // radius of thumb when be dragging
     //Color
@@ -61,8 +62,9 @@ public class MarkedSeekBar extends View {
         mColorProgressLine = Color.parseColor("#FFE61616");
         mColorThumb = Color.parseColor("#FFE61616");
 
+        mThumbRadius = dp2px(5);
         mThumbRadiusOnDragging = dp2px(10);
-        mSecondTrackSize = dp2px(5);
+        mSecondTrackSize = dp2px(2);
     }
 
     @Override
@@ -71,6 +73,9 @@ public class MarkedSeekBar extends View {
 
         mLeft = getPaddingLeft() + mThumbRadiusOnDragging;
         mRight = getMeasuredWidth() - getPaddingRight() - mThumbRadiusOnDragging;
+
+        mTrackLength = mRight - mLeft;
+        mDelta = mMax - mMin;
     }
 
     @Override
@@ -81,6 +86,11 @@ public class MarkedSeekBar extends View {
         float xRight = getMeasuredWidth() - getPaddingRight();
         float yTop = getPaddingTop() + mThumbRadiusOnDragging;
 
+
+        if (!isThumbOnDragging) {
+            mThumbCenterX = mTrackLength / mDelta * (mProgress - mMin) + xLeft;
+        }
+
         //draw background line
         mPaint.setColor(mColorBackgroundLine);
         mPaint.setStrokeWidth(mSecondTrackSize);
@@ -90,7 +100,7 @@ public class MarkedSeekBar extends View {
 
         //draw the marker
         mPaint.setColor(mColorThumb);
-        canvas.drawCircle(xLeft, getMeasuredHeight() / 2, 10, mPaint);
+        canvas.drawCircle(mThumbCenterX, getMeasuredHeight() / 2, mThumbRadius, mPaint);
 
         //draw progress line
 

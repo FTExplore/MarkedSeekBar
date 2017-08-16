@@ -10,6 +10,8 @@
     <com.example.bill.seekbar.MarkedSeekBar
         android:id="@+id/sb"
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
 
 </RelativeLayout>
