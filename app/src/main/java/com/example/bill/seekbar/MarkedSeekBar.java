@@ -40,10 +40,15 @@ public class MarkedSeekBar extends View {
     private int mColorBufferingLine;
     private int mColorProgressLine;
     private int mColorThumb;
+    private int mColorMarker;
     //轨道的厚度
     private float mBackgroundTracSize;
     private float mBufferTrackSize;
     private float mProgressTrackSize;
+
+    //marker
+    private float mFilmTitleMarkerPos; // marker postion
+    private float mFilmTailMarkerPos; // marker postion
 
     public MarkedSeekBar(Context context) {
         super(context);
@@ -67,6 +72,7 @@ public class MarkedSeekBar extends View {
         mColorBufferingLine = Color.parseColor("#99ffffff");
         mColorProgressLine = Color.parseColor("#FFE61616");
         mColorThumb = Color.parseColor("#FFE61616");
+        mColorMarker = Color.parseColor("#FFB6C1");
 
         mThumbRadius = dp2px(5);
         mThumbRadiusOnDragging = dp2px(10);
@@ -75,15 +81,39 @@ public class MarkedSeekBar extends View {
         mBackgroundTracSize = dp2px(2);
     }
 
+    public void setFilmTitleMarkerPos(float position) {
+        if (position < 0) {
+            mFilmTitleMarkerPos = 0;
+        } else if (position > mMax) {
+            mFilmTitleMarkerPos = mMax;
+        } else {
+            mFilmTitleMarkerPos = position;
+        }
+
+        invalidate();
+    }
+
+    public void setFilmTailMarkerPos(float position) {
+        if (position < 0) {
+            mFilmTailMarkerPos = 0;
+        } else if (position > mMax) {
+            mFilmTailMarkerPos = mMax;
+        } else {
+            mFilmTailMarkerPos = position;
+        }
+
+        invalidate();
+    }
+
     /**
      * 设置缓冲位置
      */
     public void setBufferProgress(float bufferProgress) {
-        if (bufferProgress > mBufferMaxValue){
+        if (bufferProgress > mBufferMaxValue) {
             mBufferProgress = mBufferMaxValue;
-        }else if (bufferProgress < 0){
+        } else if (bufferProgress < 0) {
             mBufferProgress = 0f;
-        }else {
+        } else {
             mBufferProgress = bufferProgress;
         }
 
@@ -119,6 +149,8 @@ public class MarkedSeekBar extends View {
         float xRight = getMeasuredWidth() - getPaddingRight();
         float yTop = getPaddingTop() + mThumbRadiusOnDragging;
         float xBuffer = (mTrackLength / mBufferDelta) * (mBufferProgress - mBufferMinValue) + mLeft;
+        float xFilmTitle = (mTrackLength / mDelta) * (mFilmTitleMarkerPos - mMin) + mLeft;
+        float xFilmTail = (mTrackLength / mDelta) * (mFilmTailMarkerPos - mMin) + mLeft;
 
         if (!isThumbOnDragging) {
             mThumbCenterX = (mTrackLength / mDelta) * (mProgress - mMin) + mLeft;
@@ -135,8 +167,9 @@ public class MarkedSeekBar extends View {
         canvas.drawLine(mLeft, yTop, xBuffer, yTop, mPaint);
 
         //draw the marker
-        /*mPaint.setColor(mColorThumb);
-        canvas.drawCircle(mThumbCenterX, getMeasuredHeight() / 2, mThumbRadius, mPaint);*/
+        mPaint.setColor(mColorMarker);
+        canvas.drawCircle(xFilmTitle, yTop, mBackgroundTracSize/2, mPaint);
+        canvas.drawCircle(xFilmTail, yTop, mBackgroundTracSize/2, mPaint);
 
         //draw progress line
         mPaint.setColor(mColorProgressLine);

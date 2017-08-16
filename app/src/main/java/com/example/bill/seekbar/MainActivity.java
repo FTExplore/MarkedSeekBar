@@ -11,6 +11,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sb = (MarkedSeekBar) findViewById(R.id.sb);
         sb.setBufferProgress(70);
+        sb.setFilmTitleMarkerPos(30);
+        sb.setFilmTailMarkerPos(80);
        /* sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
