@@ -51,7 +51,7 @@ public class MarkedSeekBar extends View {
     private float mFilmTailMarkerPos; // marker postion
 
     public interface OnSeekBarChangeListener {
-        void onProgressChanged(MarkedSeekBar seekBar, int progress, boolean isFromUser);
+        void onProgressChanged(MarkedSeekBar seekBar, float progress, boolean isFromUser);
 
         void onStartTrackingTouch(MarkedSeekBar seekBar);
 
@@ -62,6 +62,10 @@ public class MarkedSeekBar extends View {
 
     public void setOnSeekBarChangeListener(OnSeekBarChangeListener listener) {
         onSeekBarChangeListener = listener;
+    }
+
+    public float getProgress() {
+        return mProgress;
     }
 
     public MarkedSeekBar(Context context) {
@@ -223,6 +227,10 @@ public class MarkedSeekBar extends View {
 
             dx = mThumbCenterX - event.getX();
 
+            if (onSeekBarChangeListener != null){
+                onSeekBarChangeListener.onStartTrackingTouch(this);
+            }
+
             break;
             case MotionEvent.ACTION_MOVE: {
                 if (isThumbOnDragging) {
@@ -236,6 +244,10 @@ public class MarkedSeekBar extends View {
                     updateProgress();
                     invalidate();
                 }
+
+                if (onSeekBarChangeListener != null){
+                    onSeekBarChangeListener.onProgressChanged(this,mProgress,true);
+                }
             }
             break;
             case MotionEvent.ACTION_UP:
@@ -243,6 +255,10 @@ public class MarkedSeekBar extends View {
                 isThumbOnDragging = false;
                 updateProgress();
                 invalidate();
+
+                if (onSeekBarChangeListener != null){
+                    onSeekBarChangeListener.onStopTrackingTouch(this);
+                }
             }
             break;
             default:
@@ -250,7 +266,7 @@ public class MarkedSeekBar extends View {
 
         }
 
-        Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
+        //Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
 
         return isThumbOnDragging || super.onTouchEvent(event);
     }

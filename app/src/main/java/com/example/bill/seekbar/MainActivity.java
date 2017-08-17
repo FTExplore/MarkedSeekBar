@@ -2,6 +2,8 @@ package com.example.bill.seekbar;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.SeekBar;
 
 public class MainActivity extends AppCompatActivity {
     MarkedSeekBar sb;
@@ -15,16 +17,22 @@ public class MainActivity extends AppCompatActivity {
         sb.setFilmTailMarkerPos(80);
         sb.setOnSeekBarChangeListener(new MarkedSeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onProgressChanged(MarkedSeekBar seekBar, int i, boolean b) {
+            public void onProgressChanged(MarkedSeekBar seekBar, float progress, boolean isFromUser) {
+                Log.e("ZHZ","onProgressChanged : " + progress);
             }
 
             @Override
             public void onStartTrackingTouch(MarkedSeekBar seekBar) {
+                Log.e("ZHZ","onStartTrackingTouch : " + seekBar.getProgress());
             }
 
             @Override
             public void onStopTrackingTouch(MarkedSeekBar seekBar) {
+                Log.e("ZHZ","onStopTrackingTouch : " + seekBar.getProgress());
             }
+
         });
+
+
     }
 }
