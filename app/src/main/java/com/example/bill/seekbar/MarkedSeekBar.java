@@ -268,7 +268,7 @@ public class MarkedSeekBar extends View {
 
         //Log.e("ZHZ", "x : " + event.getX() + " y : " + event.getY());
 
-        return isThumbOnDragging || super.onTouchEvent(event);
+        return true;
     }
 
     /**
